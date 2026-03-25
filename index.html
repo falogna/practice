@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Practice">
+<meta name="theme-color" content="#1a1a2e">
+<title>Practice</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjQwIiBmaWxsPSIjMWExYTJlIi8+PHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXNpemU9IjkwIiBmaWxsPSIjYzlhOTZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QPC90ZXh0Pjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#1a1a2e;--bg-deep:#0f0f1a;--text:#e8e4de;--text-muted:#9e9890;--text-instruction:#7a756d;
+--accent:#c9a96e;--accent-dim:rgba(201,169,110,.25);--accent-glow:rgba(201,169,110,.08);
+--serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+--sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;
+-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%}
+body{min-height:100vh;min-height:-webkit-fill-available;background:var(--bg);
+padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);overflow-x:hidden}
+
+.app{max-width:600px;margin:0 auto;padding:0 28px;opacity:0;transition:opacity .8s ease}
+.app.visible{opacity:1}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 16px;
+border-bottom:1px solid rgba(232,228,222,.06);margin-bottom:8px}
+.header-title{font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--text-muted);
+letter-spacing:.08em;text-transform:uppercase}
+.settings-btn{background:none;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;
+padding:8px;margin:-8px;-webkit-tap-highlight-color:transparent;transition:color .3s}
+.settings-btn:hover{color:var(--accent)}
+
+/* Toggle */
+.toggle-container{display:flex;gap:0;margin:20px 0 32px;border-bottom:1px solid rgba(232,228,222,.08)}
+.toggle-btn{background:none;border:none;color:var(--text-muted);font-family:var(--sans);
+font-size:.82rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:12px 0;
+margin-right:28px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;transition:color .3s}
+.toggle-btn.active{color:var(--accent)}
+.toggle-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:var(--accent)}
+
+/* Content blocks */
+.greeting{font-family:var(--serif);font-size:1.6rem;font-weight:300;color:var(--text);margin-bottom:40px;line-height:1.3}
+
+.block{margin-bottom:44px;opacity:0;transform:translateY(6px);animation:fadeUp .6s ease forwards}
+.block:nth-child(2){animation-delay:.1s}.block:nth-child(3){animation-delay:.15s}
+.block:nth-child(4){animation-delay:.2s}.block:nth-child(5){animation-delay:.25s}
+.block:nth-child(6){animation-delay:.3s}.block:nth-child(7){animation-delay:.35s}
+.block:nth-child(8){animation-delay:.4s}.block:nth-child(9){animation-delay:.45s}
+.block:nth-child(10){animation-delay:.5s}.block:nth-child(11){animation-delay:.55s}
+.block:nth-child(12){animation-delay:.6s}.block:nth-child(13){animation-delay:.65s}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+.block-label{font-family:var(--sans);font-size:.68rem;font-weight:500;letter-spacing:.18em;
+text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+
+.block-text{font-family:var(--serif);font-size:1.25rem;font-weight:300;line-height:1.65;color:var(--text)}
+.block-text.small{font-size:1.1rem;color:var(--text-muted)}
+.block-text em,.block-text i{font-style:italic;color:var(--text)}
+
+/* Ritual instruction - visually distinct */
+.ritual-text{font-family:var(--sans);font-size:.95rem;font-weight:300;line-height:1.7;
+color:var(--text-instruction);font-style:italic;padding:20px 24px;
+background:var(--accent-glow);border-left:2px solid var(--accent-dim);border-radius:0 6px 6px 0}
+
+.intention-word{font-family:var(--serif);font-size:2.4rem;font-weight:400;color:var(--accent);
+letter-spacing:.02em}
+
+.signoff{font-family:var(--serif);font-size:1.3rem;font-weight:300;color:var(--text-muted);
+margin:56px 0 80px;font-style:italic}
+
+.divider{width:32px;height:1px;background:var(--accent-dim);margin:40px 0}
+
+/* Evening */
+.evening-question{font-family:var(--serif);font-size:1.15rem;font-weight:300;line-height:1.6;
+color:var(--text);margin-bottom:14px;padding-left:16px;border-left:1px solid var(--accent-dim)}
+.evening-instruction{font-family:var(--serif);font-size:1.1rem;font-weight:300;line-height:1.7;
+color:var(--text-muted);margin-bottom:12px}
+.goal-title{font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.12em;
+text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.goal-text{font-family:var(--serif);font-size:1.15rem;font-weight:300;line-height:1.65;
+color:var(--text);margin-bottom:24px}
+
+/* Optional text inputs for evening reflection */
+.reflection-input{width:100%;background:rgba(232,228,222,.04);border:1px solid rgba(232,228,222,.08);
+color:var(--text);font-family:var(--serif);font-size:1rem;line-height:1.6;padding:12px 14px;
+border-radius:6px;resize:vertical;min-height:48px;margin-top:8px;margin-bottom:4px;
+transition:border-color .3s}
+.reflection-input:focus{outline:none;border-color:var(--accent-dim)}
+.reflection-input::placeholder{color:rgba(232,228,222,.2);font-style:italic}
+.optional-label{font-family:var(--sans);font-size:.7rem;color:rgba(232,228,222,.2);
+letter-spacing:.06em;margin-bottom:8px}
+
+/* Sunday review */
+.review-item{font-family:var(--serif);font-size:1.1rem;font-weight:300;line-height:1.65;
+color:var(--text);margin-bottom:20px;padding-left:16px;border-left:1px solid var(--accent-dim)}
+
+/* Sunday goal list */
+.goal-list-item{font-family:var(--serif);font-size:1.05rem;font-weight:300;line-height:1.5;
+color:var(--text-muted);margin-bottom:10px;padding-left:12px}
+.goal-list-item strong{color:var(--text);font-weight:400}
+
+/* Settings */
+.settings-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:100;
+overflow-y:auto;padding:var(--safe-top) 28px var(--safe-bottom);display:none;opacity:0;transition:opacity .3s}
+.settings-overlay.visible{display:block;opacity:1}
+.settings-header{display:flex;align-items:center;justify-content:space-between;padding:24px 0;
+border-bottom:1px solid rgba(232,228,222,.06);margin-bottom:32px}
+.settings-title{font-family:var(--serif);font-size:1.3rem;font-weight:300;color:var(--text)}
+.close-btn{background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;
+padding:8px;margin:-8px;-webkit-tap-highlight-color:transparent}
+.settings-section{margin-bottom:36px}
+.settings-section-title{font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.16em;
+text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.settings-label{font-family:var(--sans);font-size:.9rem;color:var(--text-muted)}
+.settings-input{background:rgba(232,228,222,.06);border:1px solid rgba(232,228,222,.1);color:var(--text);
+font-family:var(--sans);font-size:.9rem;padding:8px 12px;border-radius:6px;width:120px;text-align:center}
+.settings-input:focus{outline:none;border-color:var(--accent)}
+.settings-toggle{position:relative;width:48px;height:28px;background:rgba(232,228,222,.12);
+border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .3s;
+border:none}
+.settings-toggle.on{background:rgba(201,169,110,.4)}
+.settings-toggle::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;
+background:var(--text);border-radius:50%;transition:transform .3s}
+.settings-toggle.on::after{transform:translateX(20px)}
+.settings-btn-action{background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);
+color:var(--accent);font-family:var(--sans);font-size:.82rem;font-weight:500;letter-spacing:.08em;
+padding:10px 20px;border-radius:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+transition:background .3s;margin-top:8px}
+.settings-btn-action:hover{background:rgba(201,169,110,.2)}
+.settings-btn-danger{background:rgba(200,80,80,.12);border:1px solid rgba(200,80,80,.25);color:#c85050}
+
+/* History list */
+.history-list{max-height:300px;overflow-y:auto;margin-top:8px}
+.history-item{display:flex;justify-content:space-between;padding:8px 0;
+border-bottom:1px solid rgba(232,228,222,.04);font-family:var(--sans);font-size:.85rem}
+.history-date{color:var(--text-muted)}.history-word{color:var(--accent);font-weight:500;text-transform:capitalize}
+
+/* Install banner */
+.install-banner{display:none;background:var(--accent-glow);border:1px solid rgba(201,169,110,.12);
+border-radius:8px;padding:16px 20px;margin-bottom:28px;font-family:var(--sans);font-size:.85rem;
+color:var(--text-muted);line-height:1.5}
+.install-banner strong{color:var(--accent)}
+.install-banner .dismiss{background:none;border:none;color:var(--text-muted);font-size:.78rem;
+cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(232,228,222,.1);border-radius:2px}
+::selection{background:rgba(201,169,110,.25)}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="header">
+    <div class="header-title">Practice</div>
+    <button class="settings-btn" id="settingsOpen" aria-label="Settings">⚙</button>
+  </div>
+  <div class="toggle-container">
+    <button class="toggle-btn active" id="toggleMorning" data-mode="morning">Morning</button>
+    <button class="toggle-btn" id="toggleEvening" data-mode="evening">Evening</button>
+  </div>
+  <div id="installBanner" class="install-banner">
+    <strong>Install this app:</strong> In Safari, tap the Share button ↑ then "Add to Home Screen" for offline access and notifications.<br>
+    <button class="dismiss" id="dismissInstall">Dismiss</button>
+  </div>
+  <div id="content"></div>
+</div>
+
+<!-- Settings -->
+<div class="settings-overlay" id="settingsOverlay">
+<div style="max-width:600px;margin:0 auto;">
+  <div class="settings-header">
+    <div class="settings-title">Settings</div>
+    <button class="close-btn" id="settingsClose" aria-label="Close">✕</button>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">Notifications</div>
+    <div class="settings-row">
+      <span class="settings-label">Enable notifications</span>
+      <button class="settings-toggle" id="notifToggle"></button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Morning reminder</span>
+      <input type="time" class="settings-input" id="morningTime" value="07:00">
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Evening reminder</span>
+      <input type="time" class="settings-input" id="eveningTime" value="21:30">
+    </div>
+    <button class="settings-btn-action" id="saveNotifications">Save times</button>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">Intention Word History</div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">Rotation</div>
+    <button class="settings-btn-action settings-btn-danger" id="resetRotation">Reset all rotation data</button>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">About</div>
+    <p style="font-family:var(--sans);font-size:.82rem;color:var(--text-muted);line-height:1.5;">
+      Practice — a morning &amp; evening framework for Forrest.<br>Version 2.0 · March 2026
+    </p>
+  </div>
+  <div style="height:60px"></div>
+</div>
+</div>
+
+<script>
+// ============================================================
+// CONTENT DATA — ALL FROM Morning_Evening_Practice_v3
+// ============================================================
+
+const DATA = {
+identity: [
+  {
+    concept: "I am calm and centered under pressure",
+    variations: [
+      "Count to 10. Respond, don't react.",
+      "Calm like Mindlin. Outgoing and unflappable like Adam Emmerich.",
+      "Mindfulness leads to non-reactivity. Forethought permits you to respond rather than react.",
+      "No important decision should be taken in the grip of a disturbing passion.",
+      "You are the entire ocean. Waves only wreak havoc on the surface. Most of you is unimaginably spacious, calm, and deep.",
+      "Sitting on the shore watching the waves. Under the water, watching the waves above. We are the water, and waving is happening.",
+      "The view from above. Look down on earthly matters from a distance. Each moment is both transient and timeless."
+    ]
+  },
+  {
+    concept: "I am humble and of service",
+    variations: [
+      "You are the least important person in the room.",
+      "Be a conduit.",
+      "Be a man of value, not a man of success.",
+      "Purpose and autonomy, not money.",
+      "In choice of what to manifest, try to be of service. Connected and caring for others.",
+      "Live a life of purpose and meaning.",
+      "Exert yourself to give in the same measure that you have received and are still receiving.",
+      "Right effort is for the love and joy of the game, not to win or achieve fame and glory.",
+      "Marcus Aurelius: the supreme goal of life is to live as a faithful citizen of the greatest republic, the whole of nature, the brotherhood of all mankind.",
+      "All achievements will be forgotten. Be true to your innermost nature. Forget about reputation and act purely in service of wisdom and virtue."
+    ]
+  },
+  {
+    concept: "I am genuine and present",
+    variations: [
+      "Never ironic, never cynical, never pessimistic: realistic.",
+      "Be genuine. Stay in the realm of the obvious.",
+      "Don't judge.",
+      "Having a good time like Pierre Yves Chabert.",
+      "Glass half full.",
+      "Forcing / faking it makes you miss things.",
+      "Be authentic. Manifest what you need.",
+      "Don't care too much what other people think. Set boundaries, be your own man."
+    ]
+  },
+  {
+    concept: "I am generous in love and connection",
+    variations: [
+      "If you wish to be loved, love. \u2014 Seneca",
+      "The Stoic loves in a free, giving way. Without condition or reciprocity. Without compromising his moral integrity or mental serenity.",
+      "Marcus Aurelius: \u201CFree from passions and yet full of love.\u201D",
+      "He who has not been able to love more than one, did not even love that one much. \u2014 Seneca. Love everyone. Spread out your affection without over-attachment.",
+      "Thanks my good kinsman for giving me so generous a part, that I can love though not be loved. \u2014 Shaftesbury",
+      "Be less selfish. Have people you sponsor."
+    ]
+  },
+  {
+    concept: "I embrace discomfort, adversity, and the unknown",
+    variations: [
+      "The going is tough, but this is going to be great.",
+      "What greater glory attends a man while he\u2019s alive, than what he wins with his racing feet and striving hands? Come and compete then, throw your cares to the wind!",
+      "What stands in the way becomes the way. Every obstacle is an opportunity to exhibit virtue.",
+      "No tree becomes rooted and sturdy unless many a wind assails it.",
+      "Calamities make you stronger \u2014 a challenge, not a curse.",
+      "Suffering is necessary to achieve real psychological growth.",
+      "The hardest problems not only demand that we somehow manage all the moves but also that we love them. \u2014 Udo Neumann",
+      "Don\u2019t you see that I am the kind of person who can be run through without batting an eye?",
+      "If for the sake of liberation, they struggle with their habits, they\u2019ll create a fire which will gradually transform their inner world into a single whole. \u2014 Gurdjieff",
+      "This discomfort and uncertainty is the challenge. Without security or predictability.",
+      "Do... or do not. There is no try.",
+      "Sport is above all accepting the uncertain."
+    ]
+  },
+  {
+    concept: "I am brave",
+    variations: [
+      "Seek opportunities to be brave; but plan for it.",
+      "Ondra is just not afraid to fall. Neither am I.",
+      "Performance is ultimately a leap of faith. Release control of the moment. Close your eyes. Go.",
+      "Faith is also courage. The word courage comes from coeur.",
+      "Accept the reality of inevitable death, as an aspect of life."
+    ]
+  },
+  {
+    concept: "I respect and take care of myself",
+    variations: [
+      "Self-compassion \u2014 you\u2019re worthy. You\u2019re good enough. You deserve.",
+      "At the same time, accept your shadow self. D\u00e9fauts + qualit\u00e9s.",
+      "Be nice to yourself \u2014 little presents.",
+      "Don\u2019t put your needs last.",
+      "Le droit de se tromper; le droit de ne pas tout savoir; le droit de dire non; le droit de sentir et de l\u2019exprimer.",
+      "You are ready.",
+      "The only real harm is descent into vice. Failing at an indifferent thing is not a reason for self-punishment.",
+      "Marcus Aurelius wrote the same ideas to himself hundreds of times. Forgetting is not failure. Returning to the practice is the practice.",
+      "Seneca\u2019s judge does not condemn. He observes, learns, and adjourns: \u201CI will watch myself more closely next time.\u201D",
+      "If you can go 30 days without being ruled by a passion, rejoice. The count itself is the compassion \u2014 it tracks progress, not perfection."
+    ]
+  },
+  {
+    concept: "I am a lifelong learner",
+    variations: [
+      "Stay hungry, stay foolish.",
+      "Lifelong purposive learning.",
+      "The moment we start assuming that everything will be easy is the moment we shut ourselves off to learning.",
+      "Let the thing speak to you rather than assuming you know what it is. Like a little kid learning to walk.",
+      "Maintain a sense of wonder in the face of failure."
+    ]
+  }
+],
+execution: [
+  {
+    concept: "Focus on the process, not the outcome",
+    variations: [
+      "The best way to score is to try not to score. \u2014 George Mumford",
+      "The best focus is on a winning performance, not on finishing on top. \u2014 Lanny Bassham",
+      "Practice non-attachment. First understand your attachments \u2014 expectations, extrinsic motivators.",
+      "A mix of complete focus and slightly not caring.",
+      "Care \u2014 not too much, not too little, and about the right things.",
+      "We are like men playing dice for enjoyment. Play well, in good spirits, in a sportsmanlike way. But it makes no difference if you win or lose. It\u2019s just a game.",
+      "It is an illness to think solely of winning. \u2014 Yagyu Munenori",
+      "As long as you\u2019re comparing yourself to others, you\u2019re not truly challenging your own limits."
+    ]
+  },
+  {
+    concept: "Submit to the flow; don't force it",
+    variations: [
+      "Be water, my friend. \u2014 Bruce Lee",
+      "Submit yourself rather than forcing the game to submit to you.",
+      "If you put water into a cup, it becomes the cup. Now water can flow or it can crash.",
+      "You can\u2019t escape from small mind. Only free yourself from its clutches.",
+      "The willing are led by fate, the reluctant dragged."
+    ]
+  },
+  {
+    concept: "Visualize with total sensory immersion",
+    variations: [
+      "See it, hear it, feel it, smell it, taste it. Relive peak performance in full sensory detail.",
+      "Write it. Visualize it. Say it, silently and aloud. The repetition, pulling on three senses, literally creates a neural network to force action.",
+      "Visualization: relive actually experienced action, noticing clearly how you felt executing at the highest level, in as much sensory detail as possible.",
+      "You\u2019ll see it when you believe it."
+    ]
+  },
+  {
+    concept: "Prepare for the worst; rehearse adversity",
+    variations: [
+      "Premeditatio malorum. Say to yourself at daybreak: I shall come across the meddling, ungrateful, overbearing, treacherous, and envious.",
+      "Whatever has been long anticipated comes as a lighter blow. \u2014 Seneca",
+      "Visualize negative situations to prepare for them, like Alex Honnold.",
+      "Think about misfortune and your fears; in the end familiarity will blunt its terrors, the whole subject will become boring.",
+      "Stress inoculation builds psychological resilience by rehearsing distressing situations.",
+      "Imagine self and obstacles."
+    ]
+  },
+  {
+    concept: "One thing at a time, with intention",
+    variations: [
+      "Practice one thing, with intention and concentration. Over and over again.",
+      "Intention is the number one reason elite performers succeed.",
+      "Deliberate practice: motivation, knowledge, immediate informative feedback, repetition. Investigate what you did and think about error correction.",
+      "The closer you look, the sharper the knife.",
+      "Quality even in the small things.",
+      "Pay attention."
+    ]
+  },
+  {
+    concept: "Failure is feedback, not identity",
+    variations: [
+      "Success is 99% failure. Don\u2019t identify with failure \u2014 see it as feedback for learners.",
+      "Ever tried. Ever failed. No matter. Try again. Fail again. Fail better. \u2014 Beckett",
+      "Failure is my best friend. If I succeeded, I would be like dying. Maybe worse. \u2014 Giacometti",
+      "If you are out of your comfort zone, you are bound to fail. That\u2019s fine.",
+      "Adaptive coping: identify problems early, confront them honestly, deal with them directly. Without excessive rumination, emotion, or avoidance.",
+      "Look for meaning and learning in your regrets.",
+      "Setbacks are integral to changing course. CEOs who considered setbacks to be failures had 50% less chance of thriving.",
+      "Use pain to trigger quality reflections."
+    ]
+  },
+  {
+    concept: "Energy and effort come from the right place",
+    variations: [
+      "Right effort: for the love and joy of the game, not fame and glory. Forget yourself.",
+      "Harness emotion. Put all negative and positive energy towards better.",
+      "Throw yourself at good luck events with ferocious intensity, disrupt life, and don\u2019t give up.",
+      "Do the work no matter how you feel.",
+      "Fatigue is primarily a brain-derived emotion. Sometimes you need to see through it.",
+      "Go with momentum \u2014 ride the wave.",
+      "Muscle output decreases 13% with cognitive interference. Breathe. Anchor yourself in the deep center space.",
+      "Shift out of fear mode into heart mode. Parasympathetic nervous system: calm, open, caring."
+    ]
+  },
+  {
+    concept: "Flexibility and adaptability",
+    variations: [
+      "The first key strategy is flexibility of perspective. \u2014 Eric H\u00f6rst",
+      "Highly adaptable leaders scan wide networks and diverse sources of data, sensing change earlier.",
+      "Describe an event purely in terms of its objective qualities, stripped of emotive rhetoric. Divide the situation into its component parts.",
+      "Catch impressions and address them: you are just an impression."
+    ]
+  },
+  {
+    concept: "Plan and execute with discipline",
+    variations: [
+      "Make execution boring. Compartmentalize risk.",
+      "Plan and execute the plan. Number 1: keep your head down and focus on goal.",
+      "From current situation to desired situation by deadline. Writing down goals makes you 20\u201340% more likely to achieve them.",
+      "Implementation intentions: specify how, when, and where you will do it.",
+      "Time management and prioritization. Urgent and important: do it. Important but not urgent: schedule it.",
+      "Follow through and be more determined. A stunning 94% of strong CEO candidates scored high on consistently following through.",
+      "Same smarts, therefore need to work smarter."
+    ]
+  }
+],
+connection: [
+  {
+    concept: "Initiate, show up, make contact a priority",
+    variations: [
+      "Share first. People respond in kind. Something you\u2019re excited about, or a fear or concern.",
+      "Click open the address book. Who haven\u2019t you seen in a while? Make a date.",
+      "Be more social. Jump in the car. Appear in inboxes at regular intervals.",
+      "Socialize with one unique person per week."
+    ]
+  },
+  {
+    concept: "Be a loyal, trustworthy, supportive friend",
+    variations: [
+      "Stand up for friends in their absence. Trust and confide. Support emotionally.",
+      "Offer help if it\u2019s required. Try to make each other happy.",
+      "Keep each other up to date on positive life developments.",
+      "Companionate love: stable affection, mutual understanding, commitment. Nurture it daily."
+    ]
+  },
+  {
+    concept: "Listen deeply; ask real questions",
+    variations: [
+      "Deep listening: stop and listen without judgment or advice.",
+      "Speak less. Ask 10 to 20 times more questions. Be quick to admit confusion. Make fun of yourself.",
+      "What are you passionate about? What goal are you pursuing? What challenge are you facing?",
+      "Emotion-soliciting questions: What do you like about your neighborhood? What was your favorite job? What was the best part of college? Tell me about your family.",
+      "What\u2019s the best place you\u2019ve ever lived? If you could learn anything, what would it be? What advice would you give a high schooler?",
+      "Make open-ended statements: Tell me about your hometown. Say more about your day. Explain your work to me.",
+      "Show appreciation: I\u2019m so glad you shared this with me.",
+      "Say more: say less.",
+      "Looping for understanding: 1. Ask a question. 2. Summarize what you heard. 3. Ask if you got it right.",
+      "Encourage others. Laugh at their jokes. Let yourself be swayed. Change your mind. This is how you become highly influential."
+    ]
+  },
+  {
+    concept: "Match, prepare, and read the conversation",
+    variations: [
+      "Listen for someone\u2019s truth, and put your truth next to theirs.",
+      "Match someone\u2019s mindset and affect, but not necessarily their point of view or content.",
+      "Pay attention to what kind of conversation is occurring: is it a decision, an emotion, or an identity conversation? They can evolve through all three.",
+      "Share your goals and ask what the other person is seeking.",
+      "Prepare: What are two topics you most want to discuss? What is one thing you hope to say? What is one question you will ask?",
+      "Consistently adjust how you communicate. Prepare, inquire, notice, experiment."
+    ]
+  },
+  {
+    concept: "Grace with others; navigate conflict",
+    variations: [
+      "When someone opposes you: he was only doing what seemed to him the right thing. \u201CIt seemed so to him.\u201D",
+      "Foolish and vicious people are like small children. They don\u2019t understand and it makes no sense to be angry with them.",
+      "Be sensitive to others\u2019 needs and emotions.",
+      "Don\u2019t criticize or complain.",
+      "Don\u2019t take things too seriously, even if comedy of the absurd.",
+      "When someone insults you, it is not their behavior but your judgment that affronts and provokes you.",
+      "Ability to influence others.",
+      "In conflict, look beneath the surface issue for the emotional conflict underneath. The real goal is identifying the underlying tension.",
+      "Use empathetic stories and compassion to create a safe space to discuss emotions. Prove you are listening.",
+      "Control: 1. Don\u2019t try to control the other person. 2. Control yourself. 3. Control your environment. 4. Limit the scope. Find things you can control together.",
+      "Looping is a way of sharing control over the conversation."
+    ]
+  },
+  {
+    concept: "The conversation with yourself",
+    variations: [
+      "Converse (real and imagined).",
+      "Tell stories.",
+      "Ask yourself challenging questions each day, taking time and listening to your body. Don\u2019t just answer with your mind.",
+      "What makes you uncomfortable? Where does your discomfort come from? How does it hold you back or move you forward?",
+      "What hindrance do you cultivate? What do you crave? Worry about?"
+    ]
+  }
+],
+philosophy: [
+  {
+    concept: "Life is a festival; attend it well",
+    variations: [
+      "Life is a festival. Enjoy the spectacle. Your job is to take it all in properly and appreciate it.",
+      "The festival must end. Our life is on loan from Nature. We are grateful for being allowed to participate, even temporarily.",
+      "God has no need of a fault-finding spectator.",
+      "OH WOW OH WOW OH WOW.",
+      "Praise God, have a beautiful life."
+    ]
+  },
+  {
+    concept: "Contemplate death; practice liberty",
+    variations: [
+      "Death is certain. There is nothing to worry about. I knew that he was mortal. I knew that I was mortal.",
+      "To practice death is to practice liberty. The only chain that keeps us bound is the love of life.",
+      "Contemplate not only physical death but also professional death.",
+      "We die a little every day. The transition from each stage to the next is a kind of death. Viewing it as a daily event gives a lifetime of practice.",
+      "It is no great thing to live. Rather it is great to live and die honorably, wisely, and courageously. \u2014 Seneca",
+      "Sit down to finish your lunch with your friends when you learn of your death, like Paconius Agrippinus.",
+      "You are not lost, you are returned to nature."
+    ]
+  },
+  {
+    concept: "The view from above; cosmic perspective",
+    variations: [
+      "Look down on the earth as if from a distance. Look down on earthly matters from a moral sense with supreme indifference.",
+      "Try to think of each moment as both transient and yet timeless.",
+      "Grow to immeasurable size. Be free from everybody. Transcend all time. Become eternity.",
+      "Conceive yourself to be in all places at the same time: in earth, in the sea, in heaven. You are young, old, dead, beyond death.",
+      "Socrates was a citizen of the universe.",
+      "Scipio: all achievements will be forgotten. The lips of mankind can grant no fame worth seeking."
+    ]
+  },
+  {
+    concept: "Virtue is the only good; the rest is indifferent",
+    variations: [
+      "Good: wisdom, temperance, justice, courage. Bad: folly, intemperance, injustice, cowardice. Indifferent: life and death, reputation, pleasure and pain, wealth and poverty, health and sickness.",
+      "Life is neither good nor bad; it is the space for both good and bad. \u2014 Seneca",
+      "The chief good must necessarily be up to us and under our direct control.",
+      "Within our power are opinion, motivation, desire, aversion \u2014 whatever is of our own doing. Not within our power: body, property, reputation, office. \u2014 Epictetus",
+      "A throne is only a bench covered in velvet.",
+      "Harm is only that which harms our ruling faculty, our mind, which can be injured only by descending into vice."
+    ]
+  },
+  {
+    concept: "The divine spark",
+    variations: [
+      "The Greeks use the term \u201Cthe really real\u201D for the divine. The animating energy of love, unimaginably big and not us.",
+      "Martin Buber: a divine spark, enclosed by an isolating shell. Man\u2019s task is to liberate it and rejoin it with the origin.",
+      "Being in the zone is being on the path of spiritual growth.",
+      "The wolf that wins is the wolf you feed.",
+      "Bio-electrical energy extends 3\u20135 feet outside your body.",
+      "Success is the result of states of mind over time, not inherent qualities."
+    ]
+  },
+  {
+    concept: "Fate and acceptance",
+    variations: [
+      "Welcome our fate, insofar as it is beyond our control to change it. Embrace your fate as if you had willed it to happen.",
+      "Imagine you chose and created your own fate to help yourself learn and grow as an individual.",
+      "The willing are led by fate, the reluctant dragged.",
+      "Zeno was a wealthy merchant who lost everything in a shipwreck. \u201CI have had a good voyage this time, now that I have been shipwrecked.\u201D",
+      "Bad fortune may occur, but your mind is always available to turn it to good fortune by responding with virtue.",
+      "Serenity prayer: accept the things you cannot change, have the courage to change the things you can, and the wisdom to know the difference.",
+      "Tire les le\u00e7ons du pass\u00e9, concr\u00e9tise le pr\u00e9sent, pense le futur.",
+      "Don\u2019t be superstitious, except optimistic."
+    ]
+  }
+],
+quickHits: [
+  "It matters.",
+  "Fight as if you were already dead.",
+  "Sometimes it\u2019s just hard.",
+  "What are you trying to accomplish?",
+  "Be the best team player.",
+  "Do what you want \u2014 love (but don\u2019t force it or fake it).",
+  "Realize your dreams.",
+  "Try to make execution of your life boring (compartmentalize risk).",
+  "Respect yourself.",
+  "Make it happen. (Steve Jobs and the janitor.)",
+  "Everything can\u2019t be perfect (simplify).",
+  "Don\u2019t underestimate envy as a motivator.",
+  "You control what you attend to.",
+  "Information consumes the attention of its recipients. \u2014 Herbert Simon",
+  "Emotions are the worst advisor.",
+  "Practice your coping mechanisms now.",
+  "Think carefully about decisions from both an emotional and intellectual perspective.",
+  "Don\u2019t be too moral; you may cheat yourself out of much life.",
+  "Less agreeable people get higher paychecks.",
+  "Improve.",
+  "Breathe. Balance. Look. Fear. Nature.",
+  "I am getting up to do a human being\u2019s work. \u2014 Marcus Aurelius",
+  "The Daoist scripture: the wise man is cautious like someone crossing a winter stream."
+],
+awePrompts: [
+  "The observable universe is 93 billion light-years across. Every photon of light that hits your face this morning has been traveling for eight minutes from a star that could fit 1.3 million Earths inside it. You are warmed by a nuclear explosion 150 million kilometers away.",
+  "Every atom in your body heavier than hydrogen was forged inside a star that exploded. The calcium in your bones, the iron in your blood, the oxygen you\u2019re breathing \u2014 all of it stellar debris. You are stardust that learned to climb.",
+  "There are more stars in the observable universe than grains of sand on every beach on Earth. And between them: mostly nothing. The universe is almost entirely empty, and yet here you are \u2014 a pocket of organized complexity, aware of itself.",
+  "The Big Bang happened 13.8 billion years ago. For the first 380,000 years, the universe was so hot and dense that light couldn\u2019t travel freely \u2014 it was opaque. The cosmic microwave background radiation you can detect today is the afterglow of that moment when the universe first became transparent. You are living inside the cooling ember of an explosion.",
+  "When you look at the Andromeda galaxy on a clear night \u2014 the farthest thing visible to the naked eye \u2014 you\u2019re seeing light that left 2.5 million years ago, before Homo sapiens existed. The photons entering your eye are older than your species.",
+  "The rock at Fontainebleau is 30 million years old \u2014 laid down as sand on the floor of a shallow sea, compressed, lithified, and now you chalk up and grab it for three seconds on a Saturday afternoon.",
+  "Dinosaurs walked the Earth for 165 million years. Homo sapiens have been around for 300,000. If Earth\u2019s history were compressed into 24 hours, we\u2019d appear in the last 1.5 seconds. Everything you know \u2014 language, fire, law, climbing gyms \u2014 happened in less than a blink.",
+  "The Earth is 4.5 billion years old. For the first billion years, there was no life at all. Then single-celled organisms appeared and dominated for another two billion years. Complex multicellular life has only existed for about 600 million years. Consciousness \u2014 whatever it is \u2014 arrived absurdly late to the party.",
+  "66 million years ago, an asteroid roughly 10 kilometers wide struck what is now the Yucat\u00e1n Peninsula at 72,000 km/h. Within hours, the sky was on fire. Within months, the sun was blotted out. 75% of all species went extinct. The small mammals that survived in the dark eventually became you.",
+  "The first humans north of the Mediterranean arrived roughly 45,000 years ago. They crossed into Europe during a warm window in the Ice Age, following herds through landscapes of steppe grasslands and woolly mammoths. No cities, no roads, no language as we know it. You live where they walked.",
+  "Every human alive is descended from a single woman who lived in East Africa roughly 200,000 years ago. Mitochondrial Eve. Every person you pass on the street \u2014 every client, every stranger \u2014 is your distant cousin. The genetic distance between any two humans on Earth is vanishingly small.",
+  "The oldest known cave paintings in Europe are about 40,000 years old. Someone stood in a dark cave, held a torch, and pressed a hand against the wall. That impulse \u2014 to make a mark, to say I was here \u2014 is the same one that makes you want to create.",
+  "If you could shake hands with your mother, and she with hers, and so on \u2014 one generation per handshake \u2014 you\u2019d reach the first Homo sapiens in about 7,500 handshakes. A chain short enough to stretch across a small town connects you to the origin of your species.",
+  "The genetic difference between any two humans on Earth is about 0.1%. You share 99.9% of your DNA with every person you will ever meet. The things that make you are encoded in one tenth of one percent of your genome. The rest is shared story.",
+  "During the last glacial maximum, 20,000 years ago, much of Europe was a frozen steppe. Sea levels were 120 meters lower than today. You could walk from France to England. The landscape was unrecognizable \u2014 tundra, megafauna, ice sheets kilometers thick. And somewhere in it, small bands of humans survived, adapted, and continued. You descend from them.",
+  "The ocean covers 71% of the Earth\u2019s surface and contains 97% of all water on the planet. The average depth is 3,688 meters. The deepest point \u2014 the Mariana Trench \u2014 is nearly 11,000 meters down, deeper than Everest is tall. Most of it has never been seen by a human eye.",
+  "The ocean is where life began, roughly 3.8 billion years ago. Every living thing on Earth descends from something that first stirred in seawater. You carry the ocean in your blood: human plasma has almost the same salt concentration as the ancient sea.",
+  "There are more molecules of water in a single glass than there are glasses of water in all the oceans of the Earth. Scale is not intuitive. You are unimaginably large and unimaginably small at the same time.",
+  "The deep ocean is the largest habitat on Earth, and it is almost entirely unexplored. We have better maps of Mars than we do of the ocean floor. There are mountains down there taller than the Alps, canyons deeper than the Grand Canyon, and species we have never named. Most of the living space on this planet is in permanent darkness.",
+  "The pressure at the bottom of the Mariana Trench is over 1,000 atmospheres \u2014 roughly the weight of 50 jumbo jets stacked on a single person. And there are living things down there. Life found a way at pressures that would crush a submarine. It always finds a way.",
+  "On a clear night, you can see roughly 2,500 stars with the naked eye. Every single one of them is in our own galaxy. You are looking at a tiny corner of a structure containing 200 to 400 billion stars, which is itself one of roughly two trillion galaxies.",
+  "The North Star \u2014 Polaris \u2014 is about 430 light-years away. The light arriving at your eyes tonight left that star around the time Galileo was alive. You are watching history.",
+  "Every time you look at the night sky, you are looking into the past. The moon is 1.3 seconds ago. Jupiter is 35 to 52 minutes ago. The nearest star is 4.2 years ago. The Andromeda galaxy is 2.5 million years ago. Looking up is time travel.",
+  "The light from the most distant galaxies we\u2019ve observed left those galaxies over 13 billion years ago \u2014 less than a billion years after the Big Bang. When that light started traveling, the Earth didn\u2019t exist yet. The sun didn\u2019t exist. And now that light ends its journey by hitting a telescope built by primates on a small rocky planet.",
+  "On a truly dark night, you can see the Milky Way \u2014 the edge-on view of your own galaxy. You are inside it, looking out at its structure from within. It\u2019s like being a cell in a body and somehow catching a glimpse of the skeleton.",
+  "The odds of you existing \u2014 the exact you, with your specific genetic combination \u2014 have been estimated at roughly 1 in 10 to the power of 2,685,000. That number is so large it has no meaningful analogy. You are not improbable. You are statistically impossible. And yet.",
+  "Every person alive is the product of an unbroken chain of survival stretching back 3.8 billion years. Not one of your ancestors \u2014 across billions of generations, through ice ages, famines, predators, asteroids \u2014 failed to survive long enough to reproduce. You are the current endpoint of the longest winning streak in history.",
+  "Your DNA contains roughly 3.2 billion base pairs. Change a few hundred of them and you\u2019d be someone else entirely. The margin between you and not-you is vanishingly thin.",
+  "The oldest known musical instruments are bone flutes from caves in Germany, roughly 40,000 years old. Humans made music before agriculture, writing, or cities. Before we organized our food supply or recorded a single thought, we organized sound.",
+  "When you hear a beat, your motor cortex activates \u2014 even if you\u2019re sitting still. Your body prepares to move before you decide to. Rhythm bypasses thought. It reaches structures in the brain older than language, older than reasoning.",
+  "Every known human culture has music. There is no society, anywhere in history, that didn\u2019t sing. Whatever music is for \u2014 bonding, signaling, processing emotion \u2014 it appears to be as fundamental to being human as language itself.",
+  "You are a kilogram and a half of wet tissue that somehow experiences the color red, the taste of coffee, the feeling of being you. Neuroscience can map which neurons fire. It cannot explain why firing neurons produce subjective experience at all. This is the hard problem of consciousness, and nobody has solved it.",
+  "Every night when you fall asleep, your conscious experience dissolves. Every morning it reassembles. You trust this process completely, but no one can explain what consciousness is, where it goes, or why it comes back.",
+  "A single human brain contains roughly 86 billion neurons, each connected to thousands of others, forming an estimated 100 trillion synapses. More connections than stars in the Milky Way. The most complex object in the known universe is sitting between your ears.",
+  "You are the universe experiencing itself. Not metaphorically \u2014 literally. You are made of the universe\u2019s matter, powered by its energy, and you are aware. As far as we know, this is the rarest thing that exists.",
+  "Your body replaces roughly 330 billion cells every day. The person climbing tonight is not physically the same person who climbed last Thursday. You are a pattern that persists, not a thing that endures.",
+  "Your heart beats about 100,000 times a day \u2014 roughly 2.5 billion times in a lifetime \u2014 without you ever asking it to. The most reliable muscle you\u2019ll ever depend on has been working since before you were born and has never once taken a day off.",
+  "The human hand has 27 bones, 34 muscles, and over 100 ligaments and tendons. It\u2019s the most sophisticated gripping instrument that evolution has ever produced. Tonight you\u2019ll use it to hold onto a wall.",
+  "Next time you drink water today, consider: every molecule of water on Earth has been here for roughly 4.5 billion years. It has been rain, ice, ocean, river, cloud, and the blood of countless organisms. The water in your glass has been through dinosaurs. It has been part of the Ice Age. And now, briefly, it\u2019s part of you.",
+  "Find a tree today and stop in front of it. It is doing something you cannot do: converting light into matter. Right now, in its leaves, photons from the sun are being turned into sugar. The tree is eating starlight. It has been doing this silently every day since before you were born.",
+  "Pick up any object near you. It feels solid. It is almost entirely empty space. The atoms it\u2019s made of are 99.9999% nothing. If you removed all the empty space from every atom in every human on Earth, the entire species would fit inside a sugar cube.",
+  "Look at the back of your hand for ten seconds. Beneath the skin: 27 bones, 34 muscles, over 100 ligaments. This hand has no designer. It was shaped by 380 million years of trial and error, starting with the fins of fish that first crawled onto land.",
+  "Awe reduces activation in your brain\u2019s self-referential network \u2014 the part that narrates your life, tracks your status, worries about your to-do list. For a few seconds, the self gets quiet and the world gets loud. This is why it works: not because it makes you feel good, but because it makes you feel small, and in that smallness, something releases.",
+  "You can microdose awe. A few seconds of genuine attention is enough. The research shows measurable reductions in depression and anxiety from daily micro-awe practice. You don\u2019t need a mountaintop. You need to pay attention.",
+  "The point of awe is not self-improvement. By listening, you find a small seam in the universe through which to feel yourself entirely irrelevant. That\u2019s the gift."
+],
+intentionWords: [
+  "Steady","Trust","Genuine","Spacious","Brave","Open","Curious","Grounded",
+  "Intentional","Precise","Wonder","Present","Generous","Patient","Fierce",
+  "Calm","Humble","Playful","Focused","Free"
+],
+goals: {
+  monday:{name:"Climbing",description:"From 7a+ to consistently flashing 6c by July 1, and 7a by November 1.\n\nLead measures: climb 3x/week (Tue/Thu/Sat), deliberate practice on weaknesses each session, antagonist training post-climb, finger and core conditioning on recovery days as appropriate."},
+  tuesday:{name:"Professional \u2014 Client Development",description:"From current state to landing an interesting matter from Vinci, AXA, or a new client (including Japan) by October 15.\n\nLead measures: define and track specific outreach and relationship-building actions you can control. Treat client\u2019s work like it were your own."},
+  wednesday:{name:"Social / Networking",description:"Socialize with or meet one unique person per week (prospect, potential client, or otherwise person of interest).\n\nLead measure: one meeting per week, tracked. This is a lead measure itself \u2014 the lag is the relationships that develop."},
+  thursday:{name:"Creative Output",description:"Some creative output once a week: a short story, poem, song, or drawing.\n\nLead measure: one piece per week, any medium. Piggybacked onto a consistent time slot."},
+  friday:{name:"Home & Family",description:"A happy home, full of hospitality and happy guests. A solid, playful, joyful marriage. Self-actualized children.\n\nThis is an ongoing practice, not a deadline goal. Lead measures: regular quality time, presence, hosting."},
+  saturday:{name:"Health & Longevity",description:"Long, long healthspan.\n\nLead measures: consistent training per weekly schedule, recovery protocols, annual checkups, stress management through morning/evening practice."}
+},
+rituals: {
+  morning: "Stand in tadasana. Say \u201Cbegin.\u201D Center yourself \u2014 feel your feet on the floor, straighten your spine, drop your shoulders. Then fold forward and lower into child\u2019s pose. Rest there for a few breaths.",
+  evening: "Begin in child\u2019s pose. Rest there for a few breaths. When you\u2019re ready, rise to tadasana. Stand tall. Say \u201Cend.\u201D The day is closed."
+}
+};
+
+// ============================================================
+// APP LOGIC
+// ============================================================
+(function(){
+'use strict';
+
+function dateStr(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function dow(d){return(d||new Date()).getDay()}
+function lsGet(k,def){try{const v=localStorage.getItem('p_'+k);return v!==null?JSON.parse(v):def}catch(e){return def}}
+function lsSet(k,v){try{localStorage.setItem('p_'+k,JSON.stringify(v))}catch(e){}}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function nl2br(s){return s.replace(/\n/g,'<br>')}
+
+// --- Shuffle-based rotation ---
+// Returns the next item from a shuffled rotation, stored in localStorage
+function getNextFromShuffle(key, totalCount) {
+  let state = lsGet(key, null);
+  if (!state || !state.order || state.order.length === 0 || state.pos >= state.order.length) {
+    // Create new shuffle
+    let order = [];
+    for (let i = 0; i < totalCount; i++) order.push(i);
+    // Fisher-Yates shuffle
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    state = { order: order, pos: 0 };
+  }
+  const idx = state.order[state.pos];
+  state.pos++;
+  lsSet(key, state);
+  return idx;
+}
+
+// --- Generate day's content ---
+function generate() {
+  const today = dateStr();
+  const existing = lsGet('day', null);
+  if (existing && existing.date === today) return existing;
+
+  const d = dow();
+
+  // Five reminders — one from each list
+  const idIdx = getNextFromShuffle('rot_identity', DATA.identity.length);
+  const idVariation = pick(DATA.identity[idIdx].variations);
+
+  const exIdx = getNextFromShuffle('rot_execution', DATA.execution.length);
+  const exVariation = pick(DATA.execution[exIdx].variations);
+
+  const cnIdx = getNextFromShuffle('rot_connection', DATA.connection.length);
+  const cnVariation = pick(DATA.connection[cnIdx].variations);
+
+  const phIdx = getNextFromShuffle('rot_philosophy', DATA.philosophy.length);
+  const phVariation = pick(DATA.philosophy[phIdx].variations);
+
+  const qhIdx = getNextFromShuffle('rot_quickhits', DATA.quickHits.length);
+  const qhText = DATA.quickHits[qhIdx];
+
+  // Awe prompt
+  const aweIdx = getNextFromShuffle('rot_awe', DATA.awePrompts.length);
+  const aweText = DATA.awePrompts[aweIdx];
+
+  // Intention word
+  const iwIdx = getNextFromShuffle('rot_intention', DATA.intentionWords.length);
+  const intentionWord = DATA.intentionWords[iwIdx];
+
+  // Evening goal
+  const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  const dayName = dayNames[d];
+  let goalData;
+  if (d === 0) {
+    goalData = { name: 'Free Choice', description: 'Whichever goal calls to you tonight, or the larger horizon.', isFree: true };
+  } else {
+    goalData = DATA.goals[dayName] || { name: '', description: '' };
+  }
+
+  const dayContent = {
+    date: today,
+    dow: d,
+    identity: idVariation,
+    execution: exVariation,
+    connection: cnVariation,
+    philosophy: phVariation,
+    quickHit: qhText,
+    awe: aweText,
+    intentionWord: intentionWord,
+    goal: goalData,
+    isSunday: d === 0
+  };
+
+  lsSet('day', dayContent);
+
+  // Save to history
+  let history = lsGet('history', []);
+  if (!history.find(h => h.date === today)) {
+    history.unshift({ date: today, word: intentionWord });
+    if (history.length > 90) history = history.slice(0, 90);
+    lsSet('history', history);
+  }
+
+  return dayContent;
+}
+
+// --- Render Morning ---
+function renderMorning(dc) {
+  return `
+    <div class="greeting block">Good morning, Forrest.</div>
+
+    <div class="block">
+      <div class="block-label">Ritual</div>
+      <div class="ritual-text">${esc(DATA.rituals.morning)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Awe</div>
+      <div class="block-text">${esc(dc.awe)}</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="block">
+      <div class="block-label">Identity</div>
+      <div class="block-text">${esc(dc.identity)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Execution</div>
+      <div class="block-text">${esc(dc.execution)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Connection</div>
+      <div class="block-text">${esc(dc.connection)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Philosophy</div>
+      <div class="block-text">${esc(dc.philosophy)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Quick Hit</div>
+      <div class="block-text">${esc(dc.quickHit)}</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="block">
+      <div class="block-label">Today\u2019s Word</div>
+      <div class="intention-word">${esc(cap(dc.intentionWord))}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Closing Breath</div>
+      <div class="ritual-text">Close your eyes. One breath \u2014 inhale through the nose, exhale slowly. Silently repeat today\u2019s word on the exhale. Open your eyes. Go.</div>
+    </div>
+
+    <div class="signoff block">Have a good one.</div>
+  `;
+}
+
+// --- Render Evening ---
+function renderEvening(dc) {
+  if (dc.isSunday) return renderSunday(dc);
+
+  const goalDesc = nl2br(esc(dc.goal.description || ''));
+  let goalSection;
+  if (dc.goal.isFree) {
+    // Show all goals for Sunday free choice
+    let allGoals = '';
+    const dayOrder = ['monday','tuesday','wednesday','thursday','friday','saturday'];
+    dayOrder.forEach(dn => {
+      const g = DATA.goals[dn];
+      allGoals += `<div class="goal-list-item"><strong>${esc(g.name)}:</strong> ${esc(g.description.split('\n')[0])}</div>`;
+    });
+    goalSection = `
+      <div class="block-text small" style="margin-bottom:16px;">${esc(dc.goal.description)}</div>
+      ${allGoals}
+    `;
+  } else {
+    goalSection = `
+      <div class="goal-title">Tonight\u2019s Goal \u2014 ${esc(dc.goal.name)}</div>
+      <div class="goal-text">${goalDesc}</div>
+    `;
+  }
+
+  return `
+    <div class="greeting block">Good evening, Forrest.</div>
+
+    <div class="block">
+      <div class="block-label">Ritual</div>
+      <div class="ritual-text">${esc(DATA.rituals.evening)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Review</div>
+      <div class="block-text" style="margin-bottom:20px;">This morning\u2019s word was <em>${esc(cap(dc.intentionWord))}</em>. Was there a moment today where it showed up \u2014 where you lived it or missed it?</div>
+      <div class="evening-question">What went well today?</div>
+      <div class="optional-label">optional</div>
+      <textarea class="reflection-input" placeholder="..." rows="2" id="reflectWell"></textarea>
+      <div class="evening-question">What would you do differently?</div>
+      <div class="optional-label">optional</div>
+      <textarea class="reflection-input" placeholder="..." rows="2" id="reflectDiff"></textarea>
+      <div class="evening-question">What\u2019s left undone that needs tomorrow\u2019s attention?</div>
+      <div class="optional-label">optional</div>
+      <textarea class="reflection-input" placeholder="..." rows="2" id="reflectUndone"></textarea>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Gratitude</div>
+      <div class="block-text">Name three specific things. Details matter more than categories.</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Manifesting</div>
+      ${goalSection}
+      <div class="evening-instruction" style="margin-top:20px;">Open your breathing app. When you\u2019re calm, step into the process. Visualize yourself doing the work \u2014 not the finish line, but the effort, the focus, the feel of executing. What do your hands feel? What do you see? What do you hear? Five senses, applied to the doing. Let the emotion of deep engagement come.</div>
+      <div class="block-text small" style="margin-top:16px;font-style:italic;">Then release: this or something better unfolds for me.</div>
+    </div>
+
+    <div class="signoff block">Sleep well.</div>
+  `;
+}
+
+// --- Sunday Weekly Review ---
+function renderSunday(dc) {
+  return `
+    <div class="greeting block">Good evening, Forrest.</div>
+
+    <div class="block">
+      <div class="block-label">Ritual</div>
+      <div class="ritual-text">${esc(DATA.rituals.evening)}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Weekly Review</div>
+      <div class="review-item">Check all inboxes and to-dos. Clear what\u2019s clearable.</div>
+      <div class="review-item">Reflect on the week: What worked? What didn\u2019t? Where did I show up as the person I want to be?</div>
+      <div class="review-item">Review the calendar for the coming week. Anticipate pressure points.</div>
+      <div class="review-item">Plan: what are my 1\u20132 key commitments for next week? Focused, specific, impactful, completable within a week.</div>
+      <div class="review-item">One relationship check: who haven\u2019t I connected with recently? Schedule something.</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">Manifesting</div>
+      <div class="block-text" style="margin-bottom:20px;">Tonight, go wider. Not one goal \u2014 the whole horizon.</div>
+      <div class="evening-instruction">Open your breathing app. When you\u2019re calm, step into the process. Visualize yourself doing the work \u2014 not the finish line, but the effort, the focus, the feel of executing. What do your hands feel? What do you see? What do you hear? Five senses, applied to the doing. Let the emotion of deep engagement come.</div>
+      <div class="block-text small" style="margin-top:16px;font-style:italic;">Then release: this or something better unfolds for me.</div>
+    </div>
+
+    <div class="signoff block">Sleep well. Good week ahead.</div>
+  `;
+}
+
+// --- Mode ---
+let mode = 'morning';
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('toggleMorning').classList.toggle('active', m === 'morning');
+  document.getElementById('toggleEvening').classList.toggle('active', m === 'evening');
+  render();
+}
+
+function render() {
+  const dc = generate();
+  const el = document.getElementById('content');
+  el.style.opacity = '0';
+  el.style.transition = 'opacity .15s';
+  setTimeout(() => {
+    el.innerHTML = mode === 'morning' ? renderMorning(dc) : renderEvening(dc);
+    el.style.transition = 'opacity .5s';
+    el.style.opacity = '1';
+  }, 150);
+}
+
+// --- Settings ---
+function openSettings() {
+  const o = document.getElementById('settingsOverlay');
+  o.style.display = 'block';
+  requestAnimationFrame(() => o.classList.add('visible'));
+  document.getElementById('morningTime').value = lsGet('morningTime', '07:00');
+  document.getElementById('eveningTime').value = lsGet('eveningTime', '21:30');
+  const notifOn = lsGet('notifOn', false);
+  document.getElementById('notifToggle').classList.toggle('on', notifOn);
+  renderHistory();
+}
+
+function closeSettings() {
+  const o = document.getElementById('settingsOverlay');
+  o.classList.remove('visible');
+  setTimeout(() => o.style.display = 'none', 300);
+}
+
+function renderHistory() {
+  const history = lsGet('history', []);
+  const el = document.getElementById('historyList');
+  if (history.length === 0) {
+    el.innerHTML = '<div style="font-size:.85rem;color:var(--text-muted);">No history yet.</div>';
+    return;
+  }
+  el.innerHTML = history.slice(0, 30).map(h =>
+    `<div class="history-item"><span class="history-date">${h.date}</span><span class="history-word">${esc(cap(h.word))}</span></div>`
+  ).join('');
+}
+
+// --- Notifications ---
+let notifTimers = [];
+function clearNotifTimers() { notifTimers.forEach(t => clearTimeout(t)); notifTimers = []; }
+
+function scheduleNotifs() {
+  clearNotifTimers();
+  if (!lsGet('notifOn', false)) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+  const mt = lsGet('morningTime', '07:00');
+  const et = lsGet('eveningTime', '21:30');
+  const now = new Date();
+
+  function sched(timeStr, body, tag) {
+    const [h, m] = timeStr.split(':').map(Number);
+    const target = new Date(now);
+    target.setHours(h, m, 0, 0);
+    if (target <= now) target.setDate(target.getDate() + 1);
+    const delay = target - now;
+    notifTimers.push(setTimeout(() => {
+      new Notification('Practice', { body, tag });
+      scheduleNotifs();
+    }, delay));
+  }
+  sched(mt, 'Good morning, Forrest.', 'morning');
+  sched(et, 'Good evening, Forrest.', 'evening');
+}
+
+// --- Init ---
+function init() {
+  generate();
+  const hour = new Date().getHours();
+  if (hour >= 17 || hour < 4) mode = 'evening';
+  render();
+
+  requestAnimationFrame(() => document.getElementById('app').classList.add('visible'));
+
+  document.getElementById('toggleMorning').addEventListener('click', () => setMode('morning'));
+  document.getElementById('toggleEvening').addEventListener('click', () => setMode('evening'));
+  document.getElementById('settingsOpen').addEventListener('click', openSettings);
+  document.getElementById('settingsClose').addEventListener('click', closeSettings);
+
+  // Notification toggle
+  document.getElementById('notifToggle').addEventListener('click', function() {
+    const on = !this.classList.contains('on');
+    if (on && 'Notification' in window && Notification.permission !== 'granted') {
+      Notification.requestPermission().then(perm => {
+        if (perm === 'granted') {
+          this.classList.add('on');
+          lsSet('notifOn', true);
+          scheduleNotifs();
+        } else {
+          alert('Notification permission was denied. You can enable it in your device settings.');
+        }
+      });
+    } else {
+      this.classList.toggle('on', on);
+      lsSet('notifOn', on);
+      if (on) scheduleNotifs(); else clearNotifTimers();
+    }
+  });
+
+  // Save notification times
+  document.getElementById('saveNotifications').addEventListener('click', () => {
+    lsSet('morningTime', document.getElementById('morningTime').value);
+    lsSet('eveningTime', document.getElementById('eveningTime').value);
+    scheduleNotifs();
+    alert('Notification times saved.');
+  });
+
+  // Reset rotation
+  document.getElementById('resetRotation').addEventListener('click', () => {
+    if (confirm('Reset all rotation data? Today\u2019s content will regenerate.')) {
+      ['day','rot_identity','rot_execution','rot_connection','rot_philosophy','rot_quickhits','rot_awe','rot_intention'].forEach(k => {
+        try { localStorage.removeItem('p_' + k); } catch(e) {}
+      });
+      render();
+      alert('Rotation data reset.');
+    }
+  });
+
+  // Install banner
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (!standalone && !lsGet('installDismissed', false)) {
+    document.getElementById('installBanner').style.display = 'block';
+  }
+  document.getElementById('dismissInstall').addEventListener('click', () => {
+    lsSet('installDismissed', true);
+    document.getElementById('installBanner').style.display = 'none';
+  });
+
+  // Start notifications if enabled
+  if (lsGet('notifOn', false) && 'Notification' in window && Notification.permission === 'granted') {
+    scheduleNotifs();
+  }
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+
+})();
+</script>
+
+<script>
+// ============================================================
+// SERVICE WORKER REGISTRATION & OFFLINE CACHING
+// ============================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    // Pre-cache the page itself
+    try {
+      const cache = await caches.open('practice-v2');
+      const url = window.location.href.split('?')[0].split('#')[0];
+      const resp = await fetch(url);
+      if (resp.ok) await cache.put(url, resp);
+    } catch(e) {}
+
+    // Register service worker
+    try {
+      await navigator.serviceWorker.register('sw.js');
+    } catch(e) {
+      console.log('SW registration unavailable');
+    }
+  });
+}
+</script>
+
+</body>
+</html>
